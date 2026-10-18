@@ -5,8 +5,7 @@ Inlay hints for [`@codemirror/lsp-client`](https://github.com/codemirror/lsp-cli
 Inlay hints are the small labels a language server places in your code.
 For example, a parameter's name before an argument, or a variable's type after it.
 In MyST, a hint after a reference can show what it points to, like `Figure 1`.
-`@codemirror/lsp-client` doesn't show them, and its maintainer [prefers that they live outside it](https://code.haverbeke.berlin/codemirror/dev/issues/1772).
-This package adds them as an extension for `LSPClient`.
+`@codemirror/lsp-client` doesn't show them, so this package adds them as an extension for `LSPClient`.
 
 ![Two references in a MyST document, each followed by a grey hint: "Figure 1" and "Section: The basics".](docs/images/inlay-hints.png)
 
