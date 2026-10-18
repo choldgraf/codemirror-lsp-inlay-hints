@@ -9,7 +9,8 @@ npm run build
 ```
 
 The tests run CodeMirror in [jsdom](https://github.com/jsdom/jsdom) against a fake language server, and take about a second.
-`npm run build` also typechecks, and `npm install` runs it through the `prepare` script.
+`npm run build` also typechecks.
+`npm install` runs it too, through the `prepare` script.
 CI runs `npm ci` and the tests on every pull request.
 
 To try a change in another project, install your checkout as a copy:
@@ -18,8 +19,10 @@ To try a change in another project, install your checkout as a copy:
 npm install ../codemirror-lsp-inlay-hints --install-links
 ```
 
-A plain `file:` link would give that project two copies of `@codemirror/state`, and CodeMirror breaks when extensions come from different copies.
-npm only re-copies when the version changes, so to pick up later changes, delete the copy in that project's `node_modules` and install again.
+A plain `file:` link would give that project two copies of `@codemirror/state`.
+CodeMirror breaks when extensions come from different copies.
+npm only re-copies when the version changes.
+To pick up later changes, delete the copy in that project's `node_modules` and install again.
 
 ## Docs
 

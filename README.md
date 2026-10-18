@@ -3,9 +3,11 @@
 Inlay hints for [`@codemirror/lsp-client`](https://github.com/codemirror/lsp-client).
 
 Inlay hints are the small labels a language server places in your code.
-They can be a parameter name before an argument, an inferred type after a variable, or the "Figure 1" a MyST reference will render as.
-`@codemirror/lsp-client` doesn't show them, and its maintainer [prefers that they live outside it](https://code.haverbeke.berlin/codemirror/dev/issues/1772).
-This package adds them as one more client extension.
+For example, a parameter's name before an argument, or a variable's type after it.
+In MyST, a hint after a reference can show what it points to, like `Figure 1`.
+`@codemirror/lsp-client` doesn't show them.
+Its maintainer [prefers that they live outside it](https://code.haverbeke.berlin/codemirror/dev/issues/1772).
+This package adds them as an extension for `LSPClient`.
 
 ![Two references in a MyST document, each followed by a grey hint: "Figure 1" and "Section: The basics".](docs/images/inlay-hints.png)
 
@@ -33,7 +35,7 @@ Nothing happens if the server doesn't support inlay hints.
 
 ### Options
 
-`inlayHints({ delay })` sets how long to wait after the last edit, in ms, before asking again.
+`inlayHints({ delay })` sets how many milliseconds to wait after the last edit before asking again.
 It defaults to `300`.
 `delay: null` turns off automatic requests, so hints only come from `refreshInlayHints`.
 
@@ -41,10 +43,11 @@ It defaults to `300`.
 
 A file's hints can change without an edit to that file.
 For example, a reference's label changes when someone edits the file it points to.
-Servers announce this with `workspace/inlayHint/refresh`, but `@codemirror/lsp-client` doesn't handle requests from the server yet ([#1](https://github.com/choldgraf/codemirror-lsp-inlay-hints/issues/1)).
+Servers announce this with a `workspace/inlayHint/refresh` request.
+`@codemirror/lsp-client` doesn't handle requests from the server yet ([#1](https://github.com/choldgraf/codemirror-lsp-inlay-hints/issues/1)).
 
 So call `refreshInlayHints(view)` when you know the hints are out of date.
-Some servers re-publish diagnostics when another file changes, so that's a handy trigger.
+Some servers re-publish diagnostics when another file changes, so new diagnostics are a handy trigger.
 [MyST Author](https://github.com/choldgraf/myst-author) does this with [mystmd-lsp](https://github.com/choldgraf/mystmd-lsp):
 
 ```ts
@@ -66,8 +69,10 @@ const refreshOnDiagnostics: LSPClientExtension = {
 const client = new LSPClient({ extensions: [inlayHints(), refreshOnDiagnostics, ...languageServerExtensions()] });
 ```
 
-`refreshInlayHints` never rejects: if the request fails, the old hints stay.
-If you refresh on diagnostics and the server also sends them when a file opens and after every edit, as mystmd-lsp does, `inlayHints({ delay: null })` avoids asking twice.
+`refreshInlayHints` never rejects.
+If the request fails, the old hints stay.
+Some servers, like mystmd-lsp, also send diagnostics when a file opens and after every edit.
+If you refresh on diagnostics with one of those, use `inlayHints({ delay: null })` so you don't ask twice.
 
 ### Style
 
@@ -86,19 +91,21 @@ Override that with a theme:
 EditorView.theme({ '.cm-inlay-hint': { color: 'teal', fontStyle: 'italic' } });
 ```
 
-A hint's tooltip, if the server sends one, becomes its `title`.
+If the server sends a tooltip, it becomes the hint's `title`.
 
 ## How it works
 
-- It asks for the whole document's hints, and shows each as a widget at its position.
+- It asks for the whole document's hints and shows each one as a widget at its position.
 - Hints move with the text while you type, until the next response replaces them.
-- A response is dropped if the document changed or a newer request went out while it was on its way.
+- It ignores a response if the document changed or a newer request was sent in the meantime.
 
 ## Not supported yet
 
 - Receiving `workspace/inlayHint/refresh` from the server (see [Refresh hints yourself](#refresh-hints-yourself)).
 - Asking only for the visible part of the document, which matters for very long files.
-- `inlayHint/resolve`, clickable label parts, and a hint's `textEdits`.
+- `inlayHint/resolve`.
+- Clickable label parts.
+- A hint's `textEdits`.
 
 Issues and pull requests for any of these are welcome.
 See [Contributing](docs/contributing.md).

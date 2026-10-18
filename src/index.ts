@@ -41,13 +41,14 @@ const hints = StateField.define<DecorationSet>({
   provide: (f) => EditorView.decorations.from(f),
 });
 
-// The newest request per editor, so a response that arrives after a newer one is dropped.
+// Each editor's newest request, so responses to older requests are dropped.
 const latest = new WeakMap<EditorView, object>();
 
 /**
  * Ask the server for this editor's inlay hints now.
  * Use it when hints change without an edit to this file, such as after edits to other files.
- * It never rejects: if the request fails, the old hints stay.
+ * It never rejects.
+ * If the request fails, the old hints stay.
  */
 export const refreshInlayHints = (view: EditorView) => requestHints(view).catch(() => {});
 
@@ -62,7 +63,7 @@ async function requestHints(view: EditorView) {
   const doc = view.state.doc;
   const range = { start: { line: 0, character: 0 }, end: plugin.toPosition(doc.length, doc) };
   const result = await plugin.client.request<lsp.InlayHintParams, lsp.InlayHint[] | null>('textDocument/inlayHint', { textDocument: { uri: plugin.uri }, range });
-  // Stale: a newer request is on its way, or the doc changed since.
+  // Ignore this response if a newer request was sent or the doc changed since.
   if (latest.get(view) !== request || view.state.doc !== doc) return;
   const decos = (result ?? []).map((h) => widget(h).range(plugin.fromPosition(h.position, doc)));
   view.dispatch({ effects: setHints.of(Decoration.set(decos, true)) });
@@ -89,7 +90,7 @@ const theme = EditorView.baseTheme({
 
 /**
  * Show the server's [inlay hints](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_inlayHint) as widgets.
- * `delay: null` turns off the automatic requests, for hosts that call `refreshInlayHints` themselves.
+ * Pass `delay: null` to turn off automatic requests if you call `refreshInlayHints` yourself.
  */
 export function inlayHints({ delay = 300 }: { delay?: number | null } = {}): LSPClientExtension {
   return {

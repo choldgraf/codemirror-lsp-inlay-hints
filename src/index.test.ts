@@ -10,7 +10,7 @@ const { LSPClient } = await import('@codemirror/lsp-client');
 const { EditorView } = await import('@codemirror/view');
 const { inlayHints, refreshInlayHints } = await import('./index.ts');
 
-// A server whose one hint is labelled `v<doc version>.<request number>`.
+// A fake server that returns one hint, labelled `v<doc version>.<request number>`.
 // `delays` holds how long, in ms, it waits before answering each hint request.
 function fakeServer(delays: number[] = []) {
   let handler = (_: string) => {};

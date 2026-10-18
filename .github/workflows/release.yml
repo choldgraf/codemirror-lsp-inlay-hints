@@ -1,5 +1,4 @@
 # Publishes the package at the version in package.json, then tags the commit and creates a GitHub release.
-# Run it from the Actions tab (Release → Run workflow), or: gh workflow run release.yml
 # See docs/contributing.md, Release.
 name: Release
 on:
