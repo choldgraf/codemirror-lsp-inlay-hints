@@ -1,0 +1,41 @@
+{
+  "name": "codemirror-lsp-inlay-hints",
+  "version": "0.1.0",
+  "description": "Inlay hints for @codemirror/lsp-client",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test 'src/**/*.test.ts'",
+    "prepare": "npm run build",
+    "docs": "cd docs && myst build --html",
+    "docs:live": "cd docs && myst start"
+  },
+  "peerDependencies": {
+    "@codemirror/lsp-client": "^6.3.0",
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0"
+  },
+  "devDependencies": {
+    "@codemirror/lsp-client": "^6.3.0",
+    "jsdom": "^30.1.3",
+    "mystmd": "^1.11.0",
+    "typescript": "^7.0.2",
+    "vscode-languageserver-protocol": "^3.18.4"
+  },
+  "license": "CC0-1.0",
+  "keywords": [
+    "codemirror",
+    "lsp",
+    "inlay-hints"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/choldgraf/codemirror-lsp-inlay-hints.git"
+  },
+  "homepage": "https://chrisholdgraf.com/codemirror-lsp-inlay-hints/",
+  "bugs": "https://github.com/choldgraf/codemirror-lsp-inlay-hints/issues"
+}

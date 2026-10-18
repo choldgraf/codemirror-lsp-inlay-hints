@@ -1,0 +1,17 @@
+version: 1
+extends:
+  - https://raw.githubusercontent.com/myst-contrib/myst-contrib.github.io/main/docs/footer.yml
+project:
+  id: codemirror-lsp-inlay-hints
+  title: codemirror-lsp-inlay-hints
+  github: https://github.com/choldgraf/codemirror-lsp-inlay-hints
+  plugins:
+    # Fixes relative links in the included README, which MyST would otherwise resolve against docs/.
+    - https://github.com/myst-contrib/myst-include-link-rewrites/releases/latest/download/index.mjs
+  toc:
+    - file: index.md
+    - file: contributing.md
+site:
+  template: book-theme
+  options:
+    logo_text: codemirror-lsp-inlay-hints

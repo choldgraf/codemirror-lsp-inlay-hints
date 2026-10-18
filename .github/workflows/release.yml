@@ -1,0 +1,24 @@
+# Publishes the package at the version in package.json, then tags the commit and creates a GitHub release.
+# Run it from the Actions tab (Release → Run workflow), or: gh workflow run release.yml
+# See docs/contributing.md, Release.
+name: Release
+on:
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write # npm trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm test
+      - run: npm publish
+      - run: gh release create "v$(node -p 'require("./package.json").version')" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
