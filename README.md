@@ -41,7 +41,7 @@ It defaults to `300`.
 
 A file's hints can change without an edit to that file.
 For example, a reference's label changes when someone edits the file it points to.
-Servers announce this with `workspace/inlayHint/refresh`, but `@codemirror/lsp-client` doesn't handle requests from the server.
+Servers announce this with `workspace/inlayHint/refresh`, but `@codemirror/lsp-client` doesn't handle requests from the server yet ([#1](https://github.com/choldgraf/codemirror-lsp-inlay-hints/issues/1)).
 
 So call `refreshInlayHints(view)` when you know the hints are out of date.
 Some servers re-publish diagnostics when another file changes, so that's a handy trigger.
