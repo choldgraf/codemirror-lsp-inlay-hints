@@ -1,12 +1,11 @@
 # codemirror-lsp-inlay-hints
 
-Inlay hints for [`@codemirror/lsp-client`](https://github.com/codemirror/lsp-client).
+Inlay hints for [`@codemirror/lsp-client`](https://github.com/codemirror/lsp-client), the CodeMirror editor's client for language servers.
 
 Inlay hints are the small labels a language server places in your code.
 For example, a parameter's name before an argument, or a variable's type after it.
 In MyST, a hint after a reference can show what it points to, like `Figure 1`.
-`@codemirror/lsp-client` doesn't show them.
-Its maintainer [prefers that they live outside it](https://code.haverbeke.berlin/codemirror/dev/issues/1772).
+`@codemirror/lsp-client` doesn't show them, and its maintainer [prefers that they live outside it](https://code.haverbeke.berlin/codemirror/dev/issues/1772).
 This package adds them as an extension for `LSPClient`.
 
 ![Two references in a MyST document, each followed by a grey hint: "Figure 1" and "Section: The basics".](docs/images/inlay-hints.png)
@@ -37,7 +36,7 @@ Nothing happens if the server doesn't support inlay hints.
 
 `inlayHints({ delay })` sets how many milliseconds to wait after the last edit before asking again.
 It defaults to `300`.
-`delay: null` turns off automatic requests, so hints only come from `refreshInlayHints`.
+`delay: null` turns off automatic requests, so hints only come from calling `refreshInlayHints` (see below).
 
 ### Refresh hints yourself
 
@@ -47,7 +46,7 @@ Servers announce this with a `workspace/inlayHint/refresh` request.
 `@codemirror/lsp-client` doesn't handle requests from the server yet ([#1](https://github.com/choldgraf/codemirror-lsp-inlay-hints/issues/1)).
 
 So call `refreshInlayHints(view)` when you know the hints are out of date.
-Some servers re-publish diagnostics when another file changes, so new diagnostics are a handy trigger.
+Some servers re-publish diagnostics (errors and warnings) when another file changes, so new diagnostics are a handy trigger.
 [MyST Author](https://github.com/choldgraf/myst-author) does this with [mystmd-lsp](https://github.com/choldgraf/mystmd-lsp):
 
 ```ts
