@@ -72,8 +72,11 @@ async function requestHints(view: EditorView) {
 // Requests hints when the editor opens, and again `delay` ms after the last edit.
 const scheduler = (delay: number) => ViewPlugin.fromClass(class {
   view: EditorView;
-  timer = setTimeout(() => refreshInlayHints(this.view), 0);
-  constructor(view: EditorView) { this.view = view; }
+  timer: ReturnType<typeof setTimeout>;
+  constructor(view: EditorView) {
+    this.view = view;
+    this.timer = setTimeout(() => refreshInlayHints(view), 0);
+  }
   update(update: ViewUpdate) {
     if (!update.docChanged) return;
     clearTimeout(this.timer);
